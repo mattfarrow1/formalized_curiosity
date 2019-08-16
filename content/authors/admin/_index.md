@@ -1,48 +1,38 @@
 ---
 authors:
 - admin
-bio: My research interests include distributed robotics, mobile computing and programmable
-  matter.
+bio: Bringing the power of R to the field of prospect management. 
 education:
   courses:
-  - course: PhD in Artificial Intelligence
-    institution: Stanford University
-    year: 2012
-  - course: MEng in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2009
-  - course: BSc in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2008
+  - course: BFA in Theatrical Production Arts
+    institution: Ithaca College
+    year: 2005
 email: ""
 interests:
-- Artificial Intelligence
-- Computational Linguistics
-- Information Retrieval
-name: Nelson Bighetti
+- Data Analytics
+- Prospect Management
+- R
+name: Matt Farrow
 organizations:
-- name: Stanford University
+- name: Southern Methodist University
   url: ""
-role: Professor of Artificial Intelligence
+role: Assistant Director of Prospect Management
 social:
 - icon: envelope
   icon_pack: fas
   link: '#contact'
 - icon: twitter
   icon_pack: fab
-  link: https://twitter.com/GeorgeCushen
-- icon: google-scholar
-  icon_pack: ai
-  link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
+  link: https://twitter.com/_MattFarrow
 - icon: github
   icon_pack: fab
-  link: https://github.com/gcushen
+  link: https://github.com/mattfarrow1
 superuser: true
 user_groups:
 - Researchers
 - Visitors
 ---
 
-Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+Matt is the Assistant Director of Prospect Management at SMU where he has developed a passion for R and finding ways to incorporate it into his work. 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate. 
+This site is designed to be a place to share interesting projects, develop my skills, and document things for posterity. 
