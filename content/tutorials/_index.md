@@ -2,6 +2,7 @@
 header:
   caption: ""
   image: ""
-title: Publications
-view: 4
+layout: docs
+title: Tutorials
 ---
+
