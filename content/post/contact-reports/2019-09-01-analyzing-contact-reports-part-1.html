@@ -1,0 +1,94 @@
+---
+title: Analyzing Contact Reports
+author: Matt Farrow
+date: '2019-09-01'
+categories:
+  - R
+tags:
+  - fundraising
+  - R Markdown
+slug: analyzing-contact-reports-part-1
+subtitle: Part 1
+summary: Visualizing the length of time it takes a fundraiser to enter his/her contact
+  reports.
+lastmod: '2019-09-01T20:35:43-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+---
+
+
+
+<p>As our new Assistant Vice Presidents get to know their respective fundraising teams, a question arose as to how long, on average, does it take a fundraiser to enter a contact report after their visit?</p>
+<pre class="r"><code>library(tidyverse)
+library(lubridate)
+library(hrbrthemes)</code></pre>
+<p>I created a sample dataset with some [imaginary fundraisers](<a href="https://en.wikipedia.org/wiki/The_Office_(American_TV_series)" class="uri">https://en.wikipedia.org/wiki/The_Office_(American_TV_series)</a> and populated it with a visit date, the date the visit was added to the CRM, and the date that the contact report was entered.</p>
+<pre class="r"><code>df &lt;- read_csv(&quot;contact-report-sample.csv&quot;, 
+    col_types = cols(contact_report_date = col_date(format = &quot;%m/%d/%y&quot;), 
+        date_added_to_crm = col_date(format = &quot;%m/%d/%y&quot;), 
+        visit_date = col_date(format = &quot;%m/%d/%y&quot;)))
+
+glimpse(df)</code></pre>
+<pre><code>## Observations: 175
+## Variables: 4
+## $ fundraiser          &lt;chr&gt; &quot;Michael Scott&quot;, &quot;Dwight Schrute&quot;, &quot;Jim Halp…
+## $ visit_date          &lt;date&gt; 2018-06-04, 2018-06-08, 2018-06-14, 2018-06…
+## $ date_added_to_crm   &lt;date&gt; 2018-05-25, 2018-06-01, 2018-06-13, 2018-06…
+## $ contact_report_date &lt;date&gt; 2018-06-22, 2018-06-30, 2018-06-27, 2018-06…</code></pre>
+<p>Although all of the dates in this example fall during a typical fiscal year, here is a helper function to define which fiscal year a date fall in. In this example, the fiscal year ends in May, hence the function looking for months greater than 5 (May).</p>
+<pre class="r"><code>define_fiscal_year &lt;- function(x) {
+  ifelse(lubridate::month(x) &gt; 5, year(x) + 1, year(x))
+}
+
+# Define fiscal year for visit dates
+df$discal_year &lt;- define_fiscal_year(df$visit_date)</code></pre>
+<p>I now need to calculate the time between two sets of points:</p>
+<ul>
+<li>The date of the visit and when it was first added to the CRM.</li>
+<li>The date of the visit and when the contact report was added to the CRM.</li>
+</ul>
+<pre class="r"><code>df &lt;- df %&gt;% 
+  mutate(added_interval   = as.duration(interval(visit_date, date_added_to_crm)),
+         contact_interval = as.duration(interval(visit_date, contact_report_date)))</code></pre>
+<p>Using the new intervals, I’m going to group the data by fundraiser and calculate the average interval for each of the two points.</p>
+<pre class="r"><code>df &lt;- df %&gt;% 
+  group_by(fundraiser) %&gt;% 
+  summarise(avg_from_added   = mean(added_interval),
+            avg_from_contact = mean(contact_interval)) %&gt;% 
+  gather(key = &quot;action&quot;, value = &quot;duration&quot;, avg_from_added:avg_from_contact) %&gt;% 
+  ungroup() %&gt;% 
+  arrange(fundraiser, action) %&gt;% 
+  {.}
+
+head(df)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   fundraiser     action           duration
+##   &lt;chr&gt;          &lt;chr&gt;               &lt;dbl&gt;
+## 1 Angela Martin  avg_from_added   -383400 
+## 2 Angela Martin  avg_from_contact 1204200 
+## 3 Dwight Schrute avg_from_added   -339429.
+## 4 Dwight Schrute avg_from_contact 1277486.
+## 5 Jim Halpert    avg_from_added   -328320 
+## 6 Jim Halpert    avg_from_contact 1261440</code></pre>
+<p>The duration that the <code>lubridate</code> package creates is the length of time in seconds. In the plot below I’ll convert that into days.</p>
+<pre class="r"><code>ggplot(df, aes(duration / (24*60*60), fundraiser)) +
+  geom_line(aes(group = fundraiser), alpha = 0.6) +
+  geom_point(aes(color = action), size = 4, alpha = 0.6) +
+  geom_vline(xintercept = 0, size - 1, color = &quot;darkblue&quot;) +
+  geom_vline(xintercept = 10, linetype = &quot;dashed&quot;, size = 1, color = &quot;red&quot;) +
+  annotate(&quot;text&quot;, x = 1.5, y = 1.5, label = &quot;Visit Date&quot;, size = 3) +
+  labs(title = &quot;All of our Fundraisers Struggle to Enter Their\nContact Reports Promptly&quot;,
+       subtitle = &quot;although all are good about documenting their visits ahead of time&quot;,
+       x = &quot;Date Relative to Actual Visit Date&quot;,
+       y = &quot;Fundraiser&quot;,
+       caption = &quot;Average number of days from when a visit was first added to the CRM\nand when it was most recently changed.&quot;,
+       color = &quot;&quot;) +
+  scale_color_discrete(labels = c(&quot;Added to CRM&quot;, &quot;Contact Report Added&quot;)) +
+  theme_ipsum() +
+  theme(legend.position = &quot;bottom&quot;) +
+  NULL</code></pre>
+<pre><code>## Warning in geom_vline(xintercept = 0, size - 1, color = &quot;darkblue&quot;): Using both `xintercept` and `mapping` may not have the desired result as mapping is overwritten if `xintercept` is specified</code></pre>
+<p><img src="/post/contact-reports/2019-09-01-analyzing-contact-reports-part-1_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>

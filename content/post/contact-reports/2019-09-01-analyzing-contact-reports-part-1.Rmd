@@ -1,0 +1,98 @@
+---
+title: Analyzing Contact Reports
+author: Matt Farrow
+date: '2019-09-01'
+categories:
+  - R
+tags:
+  - fundraising
+  - R Markdown
+slug: analyzing-contact-reports-part-1
+subtitle: Part 1
+summary: Visualizing the length of time it takes a fundraiser to enter his/her contact
+  reports.
+lastmod: '2019-09-01T20:35:43-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+---
+
+As our new Assistant Vice Presidents get to know their respective fundraising teams, a question arose as to how long, on average, does it take a fundraiser to enter a contact report after their visit?
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(lubridate)
+library(hrbrthemes)
+```
+
+I created a sample dataset with some [imaginary fundraisers](https://en.wikipedia.org/wiki/The_Office_(American_TV_series) and populated it with a visit date, the date the visit was added to the CRM, and the date that the contact report was entered.
+
+```{r}
+df <- read_csv("contact-report-sample.csv", 
+    col_types = cols(contact_report_date = col_date(format = "%m/%d/%y"), 
+        date_added_to_crm = col_date(format = "%m/%d/%y"), 
+        visit_date = col_date(format = "%m/%d/%y")))
+
+glimpse(df)
+```
+
+Although all of the dates in this example fall during a typical fiscal year, here is a helper function to define which fiscal year a date fall in. In this example, the fiscal year ends in May, hence the function looking for months greater than 5 (May).
+
+```{r}
+define_fiscal_year <- function(x) {
+  ifelse(lubridate::month(x) > 5, year(x) + 1, year(x))
+}
+
+# Define fiscal year for visit dates
+df$discal_year <- define_fiscal_year(df$visit_date)
+```
+
+I now need to calculate the time between two sets of points:
+
+- The date of the visit and when it was first added to the CRM.
+- The date of the visit and when the contact report was added to the CRM.
+
+```{r}
+df <- df %>% 
+  mutate(added_interval   = as.duration(interval(visit_date, date_added_to_crm)),
+         contact_interval = as.duration(interval(visit_date, contact_report_date)))
+```
+
+Using the new intervals, I'm going to group the data by fundraiser and calculate the average interval for each of the two points.
+
+```{r}
+df <- df %>% 
+  group_by(fundraiser) %>% 
+  summarise(avg_from_added   = mean(added_interval),
+            avg_from_contact = mean(contact_interval)) %>% 
+  gather(key = "action", value = "duration", avg_from_added:avg_from_contact) %>% 
+  ungroup() %>% 
+  arrange(fundraiser, action) %>% 
+  {.}
+
+head(df)
+```
+
+The duration that the `lubridate` package creates is the length of time in seconds. In the plot below I'll convert that into days.
+
+```{r}
+ggplot(df, aes(duration / (24*60*60), fundraiser)) +
+  geom_line(aes(group = fundraiser), alpha = 0.6) +
+  geom_point(aes(color = action), size = 4, alpha = 0.6) +
+  geom_vline(xintercept = 0, size - 1, color = "darkblue") +
+  geom_vline(xintercept = 10, linetype = "dashed", size = 1, color = "red") +
+  annotate("text", x = 1.5, y = 1.5, label = "Visit Date", size = 3) +
+  labs(title = "All of our Fundraisers Struggle to Enter Their\nContact Reports Promptly",
+       subtitle = "although all are good about documenting their visits ahead of time",
+       x = "Date Relative to Actual Visit Date",
+       y = "Fundraiser",
+       caption = "Average number of days from when a visit was first added to the CRM\nand when it was most recently changed.",
+       color = "") +
+  scale_color_discrete(labels = c("Added to CRM", "Contact Report Added")) +
+  theme_ipsum() +
+  theme(legend.position = "bottom") +
+  NULL
+```
+
