@@ -19,35 +19,51 @@ image:
   preview_only: no
 ---
 
-As our new Assistant Vice Presidents get to know their respective fundraising teams, a question arose as to how long, on average, does it take a fundraiser to enter a contact report after their visit?
+### How quickly do fundraisers enter their contact reports?
+
+To answer this question, I created a sample dataset with some [imaginary fundraisers](https://en.wikipedia.org/wiki/The_Office_(American_TV_series)) and populated it with a visit date, the date the visit was added to the CRM, and the date that the contact report was entered. Thanks to [random.org](https://www.random.org/calendar-dates/) for their random calendar date generator!
+
+#### Setup
 
 ```{r warning=FALSE, message=FALSE}
-library(tidyverse)
-library(lubridate)
-library(hrbrthemes)
+library(tidyverse)  # We're using the dplyr and ggplot package specifically
+library(lubridate)  # For working with dates
+library(hrbrthemes) # A nice theme that I enjoy using
 ```
 
-I created a sample dataset with some [imaginary fundraisers](https://en.wikipedia.org/wiki/The_Office_(American_TV_series) and populated it with a visit date, the date the visit was added to the CRM, and the date that the contact report was entered.
+#### Load Data
+
+You can download a copy of the data from the  [GitHub repository](https://github.com/mattfarrow1/formalized_curiosity/blob/master/content/post/contact-reports/contact-report-sample.csv) for this site.
 
 ```{r}
 df <- read_csv("contact-report-sample.csv", 
     col_types = cols(contact_report_date = col_date(format = "%m/%d/%y"), 
         date_added_to_crm = col_date(format = "%m/%d/%y"), 
         visit_date = col_date(format = "%m/%d/%y")))
+```
 
+```{r warning=FALSE, message=FALSE, echo=FALSE}
 glimpse(df)
 ```
 
-Although all of the dates in this example fall during a typical fiscal year, here is a helper function to define which fiscal year a date fall in. In this example, the fiscal year ends in May, hence the function looking for months greater than 5 (May).
+#### Helper Function(s)
+
+Although all of the dates in this example fall during a typical fiscal year, here is a helper function to define which fiscal year a date falls in. In this example, the fiscal year ends in May, hence the function looking for months greater than 5 (May).
 
 ```{r}
 define_fiscal_year <- function(x) {
   ifelse(lubridate::month(x) > 5, year(x) + 1, year(x))
 }
 
-# Define fiscal year for visit dates
-df$discal_year <- define_fiscal_year(df$visit_date)
+# Define the fiscal year for visit dates
+df$fiscal_year <- define_fiscal_year(df$visit_date)
 ```
+
+```{r warning=FALSE, message=FALSE, echo=FALSE}
+glimpse(df)
+```
+
+#### Data Manipulation
 
 I now need to calculate the time between two sets of points:
 
@@ -77,7 +93,9 @@ head(df)
 
 The duration that the `lubridate` package creates is the length of time in seconds. In the plot below I'll convert that into days.
 
-```{r}
+#### Plot Data
+
+```{r warning=FALSE, message=FALSE}
 ggplot(df, aes(duration / (24*60*60), fundraiser)) +
   geom_line(aes(group = fundraiser), alpha = 0.6) +
   geom_point(aes(color = action), size = 4, alpha = 0.6) +

@@ -21,30 +21,48 @@ image:
 
 
 
-<p>As our new Assistant Vice Presidents get to know their respective fundraising teams, a question arose as to how long, on average, does it take a fundraiser to enter a contact report after their visit?</p>
-<pre class="r"><code>library(tidyverse)
-library(lubridate)
-library(hrbrthemes)</code></pre>
-<p>I created a sample dataset with some [imaginary fundraisers](<a href="https://en.wikipedia.org/wiki/The_Office_(American_TV_series)" class="uri">https://en.wikipedia.org/wiki/The_Office_(American_TV_series)</a> and populated it with a visit date, the date the visit was added to the CRM, and the date that the contact report was entered.</p>
+<div id="how-quickly-do-fundraisers-enter-their-contact-reports" class="section level3">
+<h3>How quickly do fundraisers enter their contact reports?</h3>
+<p>To answer this question, I created a sample dataset with some <a href="https://en.wikipedia.org/wiki/The_Office_(American_TV_series)">imaginary fundraisers</a> and populated it with a visit date, the date the visit was added to the CRM, and the date that the contact report was entered. Thanks to <a href="https://www.random.org/calendar-dates/">random.org</a> for their random calendar date generator!</p>
+<div id="setup" class="section level4">
+<h4>Setup</h4>
+<pre class="r"><code>library(tidyverse)  # We&#39;re using the dplyr and ggplot package specifically
+library(lubridate)  # For working with dates
+library(hrbrthemes) # A nice theme that I enjoy using</code></pre>
+</div>
+<div id="load-data" class="section level4">
+<h4>Load Data</h4>
+<p>You can download a copy of the data from the <a href="https://github.com/mattfarrow1/formalized_curiosity/blob/master/content/post/contact-reports/contact-report-sample.csv">GitHub repository</a> for this site.</p>
 <pre class="r"><code>df &lt;- read_csv(&quot;contact-report-sample.csv&quot;, 
     col_types = cols(contact_report_date = col_date(format = &quot;%m/%d/%y&quot;), 
         date_added_to_crm = col_date(format = &quot;%m/%d/%y&quot;), 
-        visit_date = col_date(format = &quot;%m/%d/%y&quot;)))
-
-glimpse(df)</code></pre>
+        visit_date = col_date(format = &quot;%m/%d/%y&quot;)))</code></pre>
 <pre><code>## Observations: 175
 ## Variables: 4
 ## $ fundraiser          &lt;chr&gt; &quot;Michael Scott&quot;, &quot;Dwight Schrute&quot;, &quot;Jim Halp…
 ## $ visit_date          &lt;date&gt; 2018-06-04, 2018-06-08, 2018-06-14, 2018-06…
 ## $ date_added_to_crm   &lt;date&gt; 2018-05-25, 2018-06-01, 2018-06-13, 2018-06…
 ## $ contact_report_date &lt;date&gt; 2018-06-22, 2018-06-30, 2018-06-27, 2018-06…</code></pre>
-<p>Although all of the dates in this example fall during a typical fiscal year, here is a helper function to define which fiscal year a date fall in. In this example, the fiscal year ends in May, hence the function looking for months greater than 5 (May).</p>
+</div>
+<div id="helper-functions" class="section level4">
+<h4>Helper Function(s)</h4>
+<p>Although all of the dates in this example fall during a typical fiscal year, here is a helper function to define which fiscal year a date falls in. In this example, the fiscal year ends in May, hence the function looking for months greater than 5 (May).</p>
 <pre class="r"><code>define_fiscal_year &lt;- function(x) {
   ifelse(lubridate::month(x) &gt; 5, year(x) + 1, year(x))
 }
 
-# Define fiscal year for visit dates
-df$discal_year &lt;- define_fiscal_year(df$visit_date)</code></pre>
+# Define the fiscal year for visit dates
+df$fiscal_year &lt;- define_fiscal_year(df$visit_date)</code></pre>
+<pre><code>## Observations: 175
+## Variables: 5
+## $ fundraiser          &lt;chr&gt; &quot;Michael Scott&quot;, &quot;Dwight Schrute&quot;, &quot;Jim Halp…
+## $ visit_date          &lt;date&gt; 2018-06-04, 2018-06-08, 2018-06-14, 2018-06…
+## $ date_added_to_crm   &lt;date&gt; 2018-05-25, 2018-06-01, 2018-06-13, 2018-06…
+## $ contact_report_date &lt;date&gt; 2018-06-22, 2018-06-30, 2018-06-27, 2018-06…
+## $ fiscal_year         &lt;dbl&gt; 2019, 2019, 2019, 2019, 2019, 2019, 2019, 20…</code></pre>
+</div>
+<div id="data-manipulation" class="section level4">
+<h4>Data Manipulation</h4>
 <p>I now need to calculate the time between two sets of points:</p>
 <ul>
 <li>The date of the visit and when it was first added to the CRM.</li>
@@ -74,6 +92,9 @@ head(df)</code></pre>
 ## 5 Jim Halpert    avg_from_added   -328320 
 ## 6 Jim Halpert    avg_from_contact 1261440</code></pre>
 <p>The duration that the <code>lubridate</code> package creates is the length of time in seconds. In the plot below I’ll convert that into days.</p>
+</div>
+<div id="plot-data" class="section level4">
+<h4>Plot Data</h4>
 <pre class="r"><code>ggplot(df, aes(duration / (24*60*60), fundraiser)) +
   geom_line(aes(group = fundraiser), alpha = 0.6) +
   geom_point(aes(color = action), size = 4, alpha = 0.6) +
@@ -90,5 +111,6 @@ head(df)</code></pre>
   theme_ipsum() +
   theme(legend.position = &quot;bottom&quot;) +
   NULL</code></pre>
-<pre><code>## Warning in geom_vline(xintercept = 0, size - 1, color = &quot;darkblue&quot;): Using both `xintercept` and `mapping` may not have the desired result as mapping is overwritten if `xintercept` is specified</code></pre>
-<p><img src="/post/contact-reports/2019-09-01-analyzing-contact-reports-part-1_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/post/contact-reports/2019-09-01-analyzing-contact-reports-part-1_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+</div>
