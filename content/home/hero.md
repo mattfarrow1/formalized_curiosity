@@ -32,4 +32,4 @@ title = "Formalized Curiosity"
 
 +++
 
-**Bringing `R` to Fundraising**
+**My Journey with `R`**

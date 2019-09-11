@@ -1,0 +1,75 @@
+---
+title: Fixing a Date Problem
+author: Matt Farrow
+date: '2019-09-08'
+categories:
+  - R
+slug: fixing-a-date-problem
+lastmod: '2019-09-08T14:59:58-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+---
+
+### Do as I say, not as I do
+
+I recently had some sloppy coding result in incorrect reports being generated so I'm documenting my fix here to own up to my error and document my steps to solve the problem.
+
+For this set of reports, I download the results of four queries from our database and run an `R` script to clean, organize, and distribute a set of reports for each fundraiser. I'll talk more about the specifics of how that works in a future post. 
+
+My problem this week came from these two lines of code:
+
+```{r}
+data_pulled <- Sys.Date()
+data_pulled <- "2019-08-15"
+```
+
+#### Do you see the problem? 
+
+I'm first defining the variable `data_pulled` using the system's date. The second line changes that same variable to a hard coded date.
+
+#### Why's that a problem?
+
+Unless I'm only running this script on August 15, 2019, the date on my `data_pulled` variable is going to be wrong. In turn, I'll be pulling the wrong data in every time. :grimacing:
+
+#### You dummy. Why'd you do that?
+
+I'm lazy. Not actively lazy per se, but in this case I took a sloppy shortcut that bit me. See, 9/10 times I'm going to be running this script on the same day that I download the data, hence my use of `Sys.Date`. 
+
+I have the 2nd definition of the `data_pulled` variable in case I have moments of re-running the month's reports. This script is fairly new and therefore is still being tweaked from month to month depending on fundraiser feedback.
+
+Most^[I recognize *most* is not the same as *all*, hence this post.] of the time, I just comment out that 2nd line of code when I'm done:
+
+```{r}
+data_pulled <- Sys.Date()
+# data_pulled <- "2019-08-15"
+```
+
+This time I forgot that step and ended up using old data for my current month's reports. :speak_no_evil:
+
+### The Solution
+
+My first step in running this report is to download the data and save it to my RStudio project in a `/data-raw/` folder with subfolders for the dates that I pull the data i.e. `/data - raw/2019-08-01/`.
+
+There are probably half a dozen ways to solve this problem, but the solution I think I'm going to take is to parse the subfolder names, convert them to dates, and find the most recent date and set that as the `data_pulled` variable.
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(lubridate)
+```
+
+```{r, warning=FALSE, message=FALSE}
+# Read in the list of folders in the specified directory.
+data_pulled <- tibble::enframe(list.dirs("data - raw/", full.names = FALSE))
+
+# Select only the column containing the folder names and convert them to dates.
+data_pulled <- data_pulled %>% 
+  dplyr::select(2) %>% 
+  lubridate::ymd(data_pulled$value)
+
+data_pulled <- max(data_pulled, na.rm = TRUE)
+```
+
+I can now pull in the most recent set of data without any manual checks on my part.
