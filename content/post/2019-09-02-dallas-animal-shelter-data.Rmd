@@ -1,0 +1,88 @@
+---
+title: Dallas Animal Shelter Data
+author: Matt Farrow
+date: '2019-09-02'
+categories:
+  - R
+tags:
+  - dallas
+  - tidyverse
+slug: dallas-animal-shelter-data
+lastmod: '2019-09-02T15:45:28-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+draft: yes
+---
+
+Dallas has a very robust open data portal that I've been wanting to play with. Let's try grabbing a dataset and poking around. I think I'll take a look at the Dallas Animal Shelter data.
+
+It appears that the dataset has an API endpoint to a JSON file that I should be able to load using the `jsonlite` package.
+
+```{r}
+# Load libraries
+library(tidyverse)
+library(jsonlite)
+```
+
+```{r cache=TRUE}
+# Load Data
+df <- fromJSON("https://www.dallasopendata.com/resource/7h2m-3um5.json")
+```
+
+#### Inspect the Data
+
+```{r}
+glimpse(df)
+```
+
+### Exploratory Data Analysis
+
+```{r}
+df %>% 
+  group_by(animal_type) %>% 
+  count() %>% 
+  ggplot(aes(animal_type, n)) +
+  geom_col() +
+  labs(title = "What Types of Animals are in Dallas Shelters?",
+       x = "",
+       y = "Animals") +
+  theme_minimal()  +
+  NULL
+
+df %>% 
+  filter(animal_type == "DOG") %>% 
+  group_by(animal_breed) %>% 
+  count() %>% 
+  ungroup() %>% 
+  top_n(10, n) %>% 
+  ggplot(aes(animal_breed, n)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Top 10 Dog Breeds at Dallas Shelters",
+       x = "Breed",
+       y = "Animals") +
+  theme_minimal() +
+  NULL
+
+df %>% 
+  filter(animal_type == "DOG") %>% 
+  group_by(animal_breed) %>% 
+  count() %>% 
+  ggplot(aes(reorder(animal_breed, n), n)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Top 10 Dog Breeds at Dallas Shelters",
+       x = "Breed",
+       y = "Animals") +
+  theme_minimal() +
+  NULL
+
+df %>% 
+  filter(animal_type == "WILDLIFE") %>% 
+  group_by(animal_breed) %>% 
+  count()
+```
+

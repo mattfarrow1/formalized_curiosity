@@ -1,0 +1,136 @@
+---
+title: Dallas Animal Shelter Data
+author: Matt Farrow
+date: '2019-09-02'
+categories:
+  - R
+tags:
+  - dallas
+  - tidyverse
+slug: dallas-animal-shelter-data
+lastmod: '2019-09-02T15:45:28-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+draft: yes
+---
+
+
+
+<p>Dallas has a very robust open data portal that I’ve been wanting to play with. Let’s try grabbing a dataset and poking around. I think I’ll take a look at the Dallas Animal Shelter data.</p>
+<p>It appears that the dataset has an API endpoint to a JSON file that I should be able to load using the <code>jsonlite</code> package.</p>
+<pre class="r"><code># Load libraries
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(jsonlite)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;jsonlite&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     flatten</code></pre>
+<pre class="r"><code># Load Data
+df &lt;- fromJSON(&quot;https://www.dallasopendata.com/resource/7h2m-3um5.json&quot;)</code></pre>
+<div id="inspect-the-data" class="section level4">
+<h4>Inspect the Data</h4>
+<pre class="r"><code>glimpse(df)</code></pre>
+<pre><code>## Observations: 1,000
+## Variables: 33
+## $ animal_id              &lt;chr&gt; &quot;A1016253&quot;, &quot;A1054398&quot;, &quot;A1029450&quot;, &quot;A104…
+## $ animal_type            &lt;chr&gt; &quot;CAT&quot;, &quot;DOG&quot;, &quot;DOG&quot;, &quot;CAT&quot;, &quot;DOG&quot;, &quot;CAT&quot;,…
+## $ animal_breed           &lt;chr&gt; &quot;DOMESTIC SH&quot;, &quot;GERM SHEPHERD&quot;, &quot;PIT BULL…
+## $ kennel_number          &lt;chr&gt; &quot;QC 02&quot;, &quot;RECEIVING&quot;, &quot;DC 03&quot;, &quot;FOSTER&quot;, …
+## $ kennel_status          &lt;chr&gt; &quot;IMPOUNDED&quot;, &quot;IMPOUNDED&quot;, &quot;UNAVAILABLE&quot;, …
+## $ activity_number        &lt;chr&gt; &quot;A17-087127&quot;, &quot;A19-147415&quot;, &quot;A18-110024&quot;,…
+## $ activity_sequence      &lt;chr&gt; &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;…
+## $ source_id              &lt;chr&gt; &quot;P0814699&quot;, &quot;P0866847&quot;, &quot;P0834141&quot;, &quot;P000…
+## $ census_tract           &lt;chr&gt; &quot;019208&quot;, &quot;013606&quot;, &quot;009000&quot;, &quot;016520&quot;, &quot;…
+## $ council_district       &lt;chr&gt; &quot;11&quot;, &quot;11&quot;, &quot;5&quot;, &quot;3&quot;, &quot;8&quot;, &quot;6&quot;, &quot;8&quot;, &quot;4&quot;,…
+## $ intake_type            &lt;chr&gt; &quot;STRAY&quot;, &quot;STRAY&quot;, &quot;CONFISCATED&quot;, &quot;STRAY&quot;,…
+## $ intake_subtype         &lt;chr&gt; &quot;QUARANTINE&quot;, &quot;POSSIBLY OWNED&quot;, &quot;QUARANTI…
+## $ intake_total           &lt;chr&gt; &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;…
+## $ staff_id               &lt;chr&gt; &quot;AR/TM&quot;, &quot;MM1759&quot;, &quot;WG1742&quot;, &quot;JS1699&quot;, &quot;K…
+## $ intake_date            &lt;chr&gt; &quot;2017-12-08T00:00:00.000&quot;, &quot;2019-01-07T00…
+## $ intake_time            &lt;chr&gt; &quot;15:59:00&quot;, &quot;16:50:00&quot;, &quot;21:15:00&quot;, &quot;02:3…
+## $ due_out                &lt;chr&gt; &quot;2017-12-18T00:00:00.000&quot;, &quot;2019-01-07T00…
+## $ intake_condition       &lt;chr&gt; &quot;TREATABLE MANAGEABLE NON-CONTAGIOUS&quot;, &quot;T…
+## $ hold_request           &lt;chr&gt; &quot;RESCU ONLY&quot;, NA, &quot;QUARANTINE&quot;, &quot;FOSTER&quot;,…
+## $ outcome_type           &lt;chr&gt; &quot;TRANSFER&quot;, &quot;RETURNED TO OWNER&quot;, &quot;RETURNE…
+## $ outcome_subtype        &lt;chr&gt; &quot;OTHER&quot;, &quot;FIELD&quot;, &quot;WALK IN&quot;, &quot;DAS&quot;, &quot;WALK…
+## $ outcome_date           &lt;chr&gt; &quot;2017-12-21T00:00:00.000&quot;, &quot;2019-01-07T00…
+## $ outcome_time           &lt;chr&gt; &quot;11:38:00&quot;, &quot;15:07:00&quot;, &quot;18:24:00&quot;, &quot;15:2…
+## $ impound_number         &lt;chr&gt; &quot;K17-402171&quot;, &quot;K19-445374&quot;, &quot;K18-416895&quot;,…
+## $ outcome_condition      &lt;chr&gt; &quot;TREATABLE MANAGEABLE NON-CONTAGIOUS&quot;, &quot;T…
+## $ chip_status            &lt;chr&gt; &quot;UNABLE TO SCAN&quot;, &quot;UNABLE TO SCAN&quot;, &quot;SCAN…
+## $ animal_origin          &lt;chr&gt; &quot;OVER THE COUNTER&quot;, &quot;FIELD&quot;, &quot;FIELD&quot;, &quot;FI…
+## $ additional_information &lt;chr&gt; &quot;TAGGED&quot;, NA, NA, &quot;FOSTER&quot;, &quot;ADOPT PENDIN…
+## $ month                  &lt;chr&gt; &quot;DEC.2017&quot;, &quot;JAN.2019&quot;, &quot;MAY.2018&quot;, &quot;AUG.…
+## $ year                   &lt;chr&gt; &quot;FY2018&quot;, &quot;FY2019&quot;, &quot;FY2018&quot;, &quot;FY2018&quot;, &quot;…
+## $ receipt_number         &lt;chr&gt; NA, NA, &quot;R18-528301&quot;, NA, &quot;R18-539505&quot;, N…
+## $ reason                 &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, &quot;HOUSING&quot;…
+## $ service_request_number &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…</code></pre>
+</div>
+<div id="exploratory-data-analysis" class="section level3">
+<h3>Exploratory Data Analysis</h3>
+<pre class="r"><code>df %&gt;% 
+  group_by(animal_type) %&gt;% 
+  count() %&gt;% 
+  ggplot(aes(animal_type, n)) +
+  geom_col() +
+  labs(title = &quot;What Types of Animals are in Dallas Shelters?&quot;,
+       x = &quot;&quot;,
+       y = &quot;Animals&quot;) +
+  theme_minimal()  +
+  NULL</code></pre>
+<p><img src="/post/2019-09-02-dallas-animal-shelter-data_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>df %&gt;% 
+  filter(animal_type == &quot;DOG&quot;) %&gt;% 
+  group_by(animal_breed) %&gt;% 
+  count() %&gt;% 
+  ungroup() %&gt;% 
+  top_n(10, n) %&gt;% 
+  ggplot(aes(animal_breed, n)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = &quot;Top 10 Dog Breeds at Dallas Shelters&quot;,
+       x = &quot;Breed&quot;,
+       y = &quot;Animals&quot;) +
+  theme_minimal() +
+  NULL</code></pre>
+<p><img src="/post/2019-09-02-dallas-animal-shelter-data_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre class="r"><code>df %&gt;% 
+  filter(animal_type == &quot;DOG&quot;) %&gt;% 
+  group_by(animal_breed) %&gt;% 
+  count() %&gt;% 
+  ggplot(aes(reorder(animal_breed, n), n)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = &quot;Top 10 Dog Breeds at Dallas Shelters&quot;,
+       x = &quot;Breed&quot;,
+       y = &quot;Animals&quot;) +
+  theme_minimal() +
+  NULL</code></pre>
+<p><img src="/post/2019-09-02-dallas-animal-shelter-data_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
+<pre class="r"><code>df %&gt;% 
+  filter(animal_type == &quot;WILDLIFE&quot;) %&gt;% 
+  group_by(animal_breed) %&gt;% 
+  count()</code></pre>
+<pre><code>## # A tibble: 6 x 2
+## # Groups:   animal_breed [6]
+##   animal_breed     n
+##   &lt;chr&gt;        &lt;int&gt;
+## 1 BAT              1
+## 2 HAMSTER          1
+## 3 OPOSSUM          6
+## 4 RABBIT SH        3
+## 5 RACCOON          8
+## 6 TURTLE           4</code></pre>
+</div>

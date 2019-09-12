@@ -6,12 +6,16 @@ categories:
   - R
 tags:
   - fundraising
-  - R Markdown
+  - rmarkdown
+  - r
+  - lubridate
+  - tidyverse
 slug: analyzing-contact-reports-part-1
 subtitle: Part 1
 summary: Visualizing the length of time it takes a fundraiser to enter his/her contact
   reports.
 lastmod: '2019-09-01T20:35:43-05:00'
+publishDate: '2019-09-01'
 featured: no
 image:
   caption: ''
