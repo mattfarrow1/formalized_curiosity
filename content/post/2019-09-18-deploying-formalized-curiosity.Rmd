@@ -1,0 +1,18 @@
+---
+title: "Deploying Formalized Curiosity"
+author: "Matt Farrow"
+date: "9/16/2019"
+output: html_document
+---
+
+## Switched Modified Date to Published Date
+
+https://discourse.gohugo.io/t/configure-how-lastmod-date-is-assigned/14190
+
+This was behaving as expected in my development environment.
+
+But when I would deploy to Netlify, the .Lastmod date was showing the date that the file had last been edited, not the lastmod value I had set in the post’s front matter.
+
+After exploring the docs, I learned that the default configuration for lastmod is to use the Git author date for the last revision of the file. But only if --enableGitInfo is passed, or enableGitInfo = true is set in site config.
+
+Turns out, I had HUGO_ENABLEGITINFO = "true" set in my netlify.toml file.
