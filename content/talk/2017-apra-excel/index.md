@@ -11,8 +11,8 @@ location: Texas Christian University
 
 # Talk start and end times
 #   End time can optionally be hidden by prefixing the line with `#`.
-date: "2017-11-17T08:30:00Z"
-date_end: "2017-11-17T15:30:00Z"
+date: "2017-11-07T08:30:00Z"
+date_end: "2017-11-07T15:30:00Z"
 all_day: false
 publishdate: "2019-10-23"
 
