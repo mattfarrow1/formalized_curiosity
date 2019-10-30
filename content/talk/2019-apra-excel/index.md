@@ -1,6 +1,6 @@
 ---
-title: Even More with Excel
-abstract: Doing More with Excel
+title: I Should Have Majored in Excel
+abstract: Talk for Apra North Texas' 2019 conference hosted by UNT Health Science Center.
 abstract_short: ""
 event: Apra North Texas Conference
 event_url: https://apranorthtexas.wildapricot.org
@@ -22,10 +22,10 @@ tags:
   - excel
 
 links:
-- icon: twitter
-  icon_pack: fab
-  name: Follow
-  url: https://twitter.com/_mattfarrow
+# - icon: twitter
+#   icon_pack: fab
+#   name: Follow
+#   url: https://twitter.com/_mattfarrow
 - icon: images
   icon_pack: fas
   name: slides
