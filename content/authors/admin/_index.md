@@ -18,9 +18,9 @@ organizations:
   url: ""
 role: Assistant Director of Prospect Management
 social:
-#- icon: envelope
-#  icon_pack: fas
-#  link: 'matt@formalizedcuriosity.net'
+- icon: envelope
+  icon_pack: fas
+  link: 'matt@formalizedcuriosity.net'
 - icon: twitter
   icon_pack: fab
   link: https://twitter.com/_MattFarrow
