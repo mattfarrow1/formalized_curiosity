@@ -1,0 +1,45 @@
+---
+title: "Cloning a GitHub Repository in RStudio Cloud"
+author: "Matt Farrow"
+date: "2019-10-01"
+output: html_document
+categories:
+  - R
+tags:
+  - github
+  - rstudio
+lastmod: '2019-10-30T14:40:15-05:00'
+publishDate: '2019-10-01'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+---
+
+
+
+<p>I’m working on a talk for an upcoming conference and decided I’d try and set up an <a href="https://rstudio.cloud">RStudio Cloud</a> project to work it from my iPad<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. I was able to clone the repository wtihout any issue, but ran into an authentication issue when I tried to commit and push my changes back up. I knew I’d run into this issue before, so I went looking for solutions and found my answer in the wonderful <a href="https://happygitwithr.com"><em>Happy Git and GitHub for the useR</em></a>.</p>
+<p>The problem was I’d cloned the repository as HTTPS, but because my GitHub account is secured with <a href="https://authy.com/what-is-2fa/">2FA</a>, I needed to connect via SSH.</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://happygitwithr.com/ssh-keys.html#option-1-set-up-from-rstudio">Generate a public key using GitHub</a></li>
+<li><a href="https://happygitwithr.com/ssh-keys.html#on-github">Add the public key to GitHub</a></li>
+<li><a href="https://help.github.com/en/github/using-git/changing-a-remotes-url#switching-remote-urls-from-https-to-ssh">Switch remote URLs from HTTPS to SSH</a></li>
+</ol>
+<div id="update" class="section level3">
+<h3>Update</h3>
+<p>Ironically, I wasn’t the only one who ran into this issue recently.</p>
+<blockquote class="twitter-tweet">
+<p lang="en" dir="ltr">
+I finally added 2-factor authentication to GitHub, but it broke my setup with <a href="https://twitter.com/hashtag/RStudio?src=hash&amp;ref_src=twsrc%5Etfw">#RStudio</a>. But I was able to figure it out (SSH) thanks to <a href="https://twitter.com/hashtag/happygitwithR?src=hash&amp;ref_src=twsrc%5Etfw">#happygitwithR</a> <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://t.co/hxPsOQpPLw">https://t.co/hxPsOQpPLw</a> Thanks <a href="https://twitter.com/JennyBryan?ref_src=twsrc%5Etfw"><span class="citation">@JennyBryan</span></a> <a href="https://twitter.com/jimhester_?ref_src=twsrc%5Etfw"><span class="citation">@jimhester_</span></a> et al!
+</p>
+— JuliaStewart Lowndes (<span class="citation">@juliesquid</span>) <a href="https://twitter.com/juliesquid/status/1189328972955443201?ref_src=twsrc%5Etfw">October 29, 2019</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I’ve long dreamed of an RStudio app, but with the new Safari update bringing <a href="https://developer.apple.com/documentation/safari_release_notes/safari_13_release_notes">desktop-class browsing</a> in iOS 13, this is a fantastic option.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
