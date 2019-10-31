@@ -29,7 +29,7 @@ links:
 - icon: images
   icon_pack: fas
   name: slides
-  url: "http://mattfarrow.org/apra-doing-more-with-excel/slides#1"
+  url: "https://mattfarrow1.github.io/apra-doing-more-with-excel/slides#1"
 - icon: github
   icon_pack: fab
   name: code
