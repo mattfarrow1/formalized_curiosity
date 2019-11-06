@@ -38,8 +38,6 @@ user_groups:
 
 *Zora Neale Hurston*
 
-I'm currently the Assistant Director of Prospect Management at SMU. Over the last few years, I've developed a passion for `R` and [RStudio](https://www.rstudio.com) and, as my skills have increased, so too has my desire to find more ways to incorporate it into my daily work.
+Several years ago I heard about `R` on the [Prospect-dmm listserve](https://mailman.mit.edu/mailman/listinfo/prospect-dmm) and was intrigued by the idea of bringing reproducibility to my work and not having to recreate the wheel every time I opened Excel. What began with trying to make my prospecting more effienct turned into a tool that I use almost daily for data wrangling & analysis, reporting, dashboards, and more.
 
-I first heard about `R` on the [Prospect-dmm listserve](https://mailman.mit.edu/mailman/listinfo/prospect-dmm) and was intrigued by the idea of bringing reproducibility to my work and not recreating the wheel every time I opened Excel. What began with trying to make my prospecting more effienct, turned into a tool that I use almost daily for data wrangling & analysis, reporting, dashboards, and more.
-
-This site is designed to be a place to share some of those interesting projects, especially for my fellow Prospect Development friends; develop my skills; and document things that I'm always referring back to for posterity. 
+This site is designed to be a place to share some of those interesting projects, especially for my fellow Prospect Development friends; develop my skills; and document things that I always seem to find myself Googling.
