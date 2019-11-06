@@ -1,20 +1,20 @@
 ---
 title: Dallas Animal Shelter Data
 author: Matt Farrow
-date: '2019-09-02'
+date: '2019-09-15'
 categories:
   - R
 tags:
   - dallas
   - tidyverse
 slug: dallas-animal-shelter-data
-lastmod: '2019-09-02T15:45:28-05:00'
+lastmod: '2019-09-15T15:45:28-05:00'
 featured: no
 image:
   caption: ''
   focal_point: ''
   preview_only: no
-draft: yes
+draft: no
 ---
 
 Dallas has a very robust open data portal that I've been wanting to play with. Let's try grabbing a dataset and poking around. I think I'll take a look at the Dallas Animal Shelter data.
