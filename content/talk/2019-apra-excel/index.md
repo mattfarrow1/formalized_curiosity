@@ -11,8 +11,8 @@ location: UNT Health Science Center
 
 # Talk start and end times
 #   End time can optionally be hidden by prefixing the line with `#`.
-date: "2019-11-13T08:30:00Z"
-date_end: "2017-11-13T15:30:00Z"
+date: "2019-11-08T08:30:00Z"
+date_end: "2017-11-08T15:30:00Z"
 all_day: false
 publishdate: "2019-10-24"
 

@@ -38,6 +38,6 @@ user_groups:
 
 *Zora Neale Hurston*
 
-Several years ago I heard about `R` on the [Prospect-dmm listserve](https://mailman.mit.edu/mailman/listinfo/prospect-dmm) and was intrigued by the idea of bringing reproducibility to my work and not having to recreate the wheel every time I opened Excel. What began with trying to make my prospecting more effienct turned into a tool that I use almost daily for data wrangling & analysis, reporting, dashboards, and more.
+Several years ago I heard about `R` on the [Prospect-dmm listserve](https://mailman.mit.edu/mailman/listinfo/prospect-dmm) and was intrigued by the idea of bringing reproducibility to my work and not having to recreate the wheel every time I opened Excel. What began with trying to make my prospecting more efficient turned into a tool that I use almost daily for data wrangling & analysis, reporting, dashboards, and more.
 
 This site is designed to be a place to share some of those interesting projects, especially for my fellow Prospect Development friends; develop my skills; and document things that I always seem to find myself Googling.
