@@ -1,0 +1,82 @@
+---
+title: "Recreating VLOOKUP in R"
+author: "Matt Farrow"
+date: "2019-11-13"
+output: html_document
+categories:
+  - R
+tags:
+  - excel
+  - dplyr
+slug: recreating-vlookup-in-r
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+draft: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+I recently gave a [talk on Excel](../../talk/2019-apra-excel/) that focused on pivot tables and the VLOOKUP function. Recreating the power of VLOOKUP is easy in R using the [dplyr](https://dplyr.tidyverse.org) package from the [tidyverse](https://www.tidyverse.org). 
+
+```{r libraries, message=FALSE}
+# Load dplyr package
+library(dplyr)
+```
+
+One of the examples I used was collapsing research ratings into more broad "buckets" for principal, major, and leadership gift-rated prospects. We'll start be making a rating lookup table that contains all our ratings along with a corresponding "bucket." This could also be stored in a .csv or .xlsx file and loaded in separately. 
+
+```{r lookup}
+rating_lookup <-
+  as_tibble(list(
+    rating = c(
+      "A - $2.5M to $5M",
+      "B - $1M to $2.5M",
+      "C - $500,000 to $1M",
+      "D - $250,000 to $499,999",
+      "E - $100,000 to $249,999",
+      "G - $50,000 to $99,999",
+      "H - $25,000 to $49,999",
+      "I - $10,000 to $24,999"
+    ),
+    rating_bucket = c("PG", "PG", "MG", "MG", "MG", "LG", "LG", "LG")
+  ))
+
+# view our new lookup table
+rating_lookup
+```
+
+Now, we'll make a sample dataset with ID numbers along with ratings.
+
+```{r data}
+df <-
+  as_tibble(list(
+    # create an id column using the numbers 1 through 50
+    lookup_id = 1:50,
+    # create a rating column by randomly sampling our previously generated ratings 50 times
+    rating = sample(rating_lookup$rating, size = 50, replace = TRUE)
+  ))
+
+# look at only the first 10 observations
+head(df, n = 10)
+```
+
+Now that we have our dataset as well as our lookup table, we can merge our rating buckets into our dataset using the [`left_join`](https://dplyr.tidyverse.org/reference/join.html) function.
+
+```{r merge}
+df <- left_join(df, rating_lookup, by = "rating")
+
+# look at only the first 10 observations
+head(df, n = 10)
+```
+
+Finally, we can use dplyr's [`count`](https://dplyr.tidyverse.org/reference/tally.html) function to recreate some of the power of Excel's pivot tables.
+
+```{r pivot}
+count(df, rating_bucket, name = "prospects")
+```
+
