@@ -1,0 +1,38 @@
+---
+title: "Tidy Tuesday"
+subtitle: "Week 3: Passwords"
+author: "Matt Farrow"
+date: "2020-01-15"
+output: html_document
+categories:
+  - R
+tags:
+  - tidytuesday
+slug: tidytuesday-2020-03
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+draft: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(RCurl)
+```
+
+## Data
+
+[This week's project](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-14/readme.md) looks at passwords with data sourced from Information is Beautiful. 
+
+Code can be viewed [here](https://github.com/mattfarrow1/tidytuesday).
+
+```{r message=FALSE}
+library(RCurl)
+
+script <- getURL("https://raw.githubusercontent.com/mattfarrow1/tidytuesday/master/2020/week03/week03.R", ssl.verifypeer = FALSE)
+
+eval(parse(text = script))
+```
+
