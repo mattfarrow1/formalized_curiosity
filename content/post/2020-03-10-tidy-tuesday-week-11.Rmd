@@ -1,0 +1,61 @@
+---
+title: "Tidy Tuesday: Week 11"
+author: "Matt Farrow"
+date: '2020-03-10'
+categories:
+  - R
+tags:
+  - tidytuesday
+slug: tidy-tuesday-week-11
+lastmod: '2020-03-10T21:49:15-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+draft: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Examining the relationship between [in-state tuition](https://www.chronicle.com/interactives/tuition-and-fees) and potential [mid-career salaries](https://www.payscale.com/college-salary-report/best-schools-by-state/bachelors/texas) for [Tidy Tuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-03-10). 
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(scales)
+
+# Load tuition cost data
+tuition_cost <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/tuition_cost.csv')
+
+# Load salary potential data
+salary_potential <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/salary_potential.csv')
+
+# Combine tution cost and salary potential datasets
+df <- left_join(tuition_cost, salary_potential)
+```
+
+```{r plotting, message=FALSE}
+df %>%
+  filter(degree_length == "4 Year",
+         type != "For Profit",
+         state_code == "TX",
+         !is.na(mid_career_pay)) %>% 
+  ggplot(aes(in_state_total, name, color = type, size = mid_career_pay)) +
+  geom_point() +
+  scale_size(range = c(1,10)) +
+  labs(title = "Tuition Cost Isn't a Guarantee of Mid-Career Pay",
+       subtitle = "4-Year Institutions in Texas with Salary Data",
+       caption = "tuition data: The Chronicle of Higher Education \nsalary data: Payscale.com",
+       x = "In-State Total (tuition, room, board)",
+       y = "Institution",
+       color = "Type of Institution",
+       size = "Mid-Career Pay") +
+  scale_x_continuous(labels = dollar) +
+  theme_minimal() +
+  theme(axis.title = element_text(size = 9),
+        plot.caption = element_text(size = 8)) +
+  NULL
+```
+
