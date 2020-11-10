@@ -1,0 +1,61 @@
+---
+  title: "Tidy Tuesday: Week 14"
+author: "Matt Farrow"
+date: '2020-03-30'
+categories:
+  - R
+tags:
+  - tidytuesday
+slug: tidy-tuesday-week-14
+lastmod: '2020-03-30T20:31:15-05:00'
+featured: no
+image:
+  caption: ''
+focal_point: ''
+preview_only: no
+draft: no
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(scales)
+```
+
+## Beer Production
+
+```{r get_data, include=FALSE, message=FALSE, warning=FALSE}
+
+# Get the Data
+
+brewing_materials <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-31/brewing_materials.csv')
+beer_taxed <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-31/beer_taxed.csv')
+brewer_size <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-31/brewer_size.csv')
+beer_states <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-31/beer_states.csv')
+
+brewing_materials <- tuesdata$brewing_materials
+```
+
+### Brewing Materials by Year
+
+```{r}
+brewing_materials %>% 
+  filter(material_type == "Grain Products",
+         year < 2016) %>% 
+  group_by(type, year) %>% 
+  summarise(month_current = sum(month_current)) %>% 
+  ggplot(aes(year, month_current)) +
+  geom_line() +
+  facet_wrap(~ type, scales = "free_y") +
+  scale_y_continuous(label = comma) +
+  labs(title = "Use of Brewing Materials by Year",
+       caption = "data: Alcohol and Tobacco Tax and Trade Bureau",
+       x = "Year",
+       y = "Barrels") +
+  theme_minimal() +
+  theme(axis.title = element_text(hjust = 1, size = 10),
+        title = element_text(face = "bold", size = 12),
+        plot.caption = element_text(face = "italic", size = 8)) +
+  NULL
+```
+
