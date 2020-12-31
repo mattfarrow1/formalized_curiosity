@@ -1,5 +1,5 @@
 ---
-  title: "Tidy Tuesday: Week 14"
+title: "Tidy Tuesday: Week 14"
 author: "Matt Farrow"
 date: '2020-03-30'
 categories:
@@ -11,8 +11,8 @@ lastmod: '2020-03-30T20:31:15-05:00'
 featured: no
 image:
   caption: ''
-focal_point: ''
-preview_only: no
+  focal_point: ''
+  preview_only: no
 draft: no
 ---
   
